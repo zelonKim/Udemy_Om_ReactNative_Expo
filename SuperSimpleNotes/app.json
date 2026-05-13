@@ -1,0 +1,55 @@
+{
+  "expo": {
+    "name": "SuperSimpleNotes",
+    "slug": "SuperSimpleNotes",
+    "version": "1.0.0",
+    "scheme": "SuperSimpleNotes",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "tsconfigPaths": true
+    },
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.zelon.SuperSimpleNotes",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.zelon.SuperSimpleNotes"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "48710e67-36ed-4bae-9428-360ab546d5f1"
+      }
+    }
+  }
+}
