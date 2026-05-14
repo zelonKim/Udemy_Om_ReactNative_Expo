@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { COLORS } from '@/core/theme/colors';
 import useNotesStore from '@/store/store';
+import { toast } from '@/lib/toast';
+
 
 type AddNoteModalProps = {
   visible: boolean;
@@ -24,6 +26,7 @@ const AddNoteModal = ({ visible, setVisible }: AddNoteModalProps) => {
 
     setNoteText('');
     setVisible(false);
+    toast.success("성공적으로 추가되었습니다.")
   };
 
 

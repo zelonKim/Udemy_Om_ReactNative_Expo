@@ -11,18 +11,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '@/core/theme/colors';
 import useNotesStore from '@/store/store';
 
-
-
 const Home = () => {
   const { notes } = useNotesStore();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-
   const openModal = () => {
     setIsModalVisible(true);
   };
-
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
@@ -46,7 +42,6 @@ const Home = () => {
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   safeAreaContainer: {
