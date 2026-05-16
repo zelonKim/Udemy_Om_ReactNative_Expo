@@ -12,6 +12,6 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "./uniwind-types.d.ts"
-  ]
+, "../Holidia/app/search.tsx"  ]
 }
 
