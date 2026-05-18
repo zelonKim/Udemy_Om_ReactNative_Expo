@@ -5,6 +5,7 @@ import Header from '@/components/header';
 import ImageWithSquircle from '@/components/image-with-squircle';
 import Text from '@/components/text';
 import { PRIMARY } from '@/core/theme/colors';
+import { router } from 'expo-router';
 
 const user = {
   email: 'ksz1860@naver.com',
@@ -20,8 +21,7 @@ const Profile = () => {
         headerAction={{
           name: 'log-out',
           onPress: () => {
-            console.log('로그아웃');
-            // signOut();
+            router.push('/welcome');
           },
         }}
       />

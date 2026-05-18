@@ -24,7 +24,7 @@ const Discovery = ({ properties }: DiscoveryProps) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.id}
-        data={properties.reverse()}
+        data={properties}
         renderItem={({ item }) => (
           <View className="mx-2 rounded-2xl" style={{ width: 200, height: 200, borderRadius: 24 }}>
             <ImageWithSquircle image={item.images[1]} width={196} height={224} borderRadius={24} />
