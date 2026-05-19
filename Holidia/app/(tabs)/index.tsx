@@ -9,11 +9,11 @@ import { client } from '@/core/api/client';
 
 
 export default function Home() {
-  
+
   const { data, isLoading } = useQuery({
-    queryKey: ['properties-list'],
+    queryKey: ['properties'],
     queryFn: async () => {
-      const { data } = await client.get('/properties-list');
+      const { data } = await client.get('/properties');
       return data.properties;
     },
   });

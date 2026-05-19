@@ -1,11 +1,10 @@
 import '../global.css';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Stack } from 'expo-router';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 import theme from '@/core/theme/use-theme-config';
 import { ThemeProvider } from '@react-navigation/native';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { logAPIUrl } from '@/core/utils/log';
 import { APIProvider } from '@/core/api/api-provider';
 
 export const unstable_settings = {
@@ -13,10 +12,6 @@ export const unstable_settings = {
 };
 
 const Providers = ({ children }: { children: ReactNode }) => {
-  useEffect(() => {
-    logAPIUrl();
-  }, []);
-
   return (
     <GestureHandlerRootView>
       <APIProvider>

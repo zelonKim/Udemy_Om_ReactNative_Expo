@@ -20,14 +20,14 @@ interface Property {
 }
 
 interface User {
-  id: string;
+  id?: string;
   name: string;
-  created_at: string;
-  username: string;
+  created_at?: string;
+  username?: string;
   email: string;
-  avatar: string;
-  properties: Property[] | null;
-  bookings: Booking[] | null;
+  avatar?: string;
+  properties?: Property[] | null;
+  bookings?: Booking[] | null;
 }
 
 interface Booking {

@@ -24,7 +24,7 @@ const PropertyImage = ({ imageUrl, rating, isFavorite }: Props) => {
           {rating}
         </Text>
       </BlurView>
-      
+
       <BlurView className="absolute bottom-8 right-8 flex flex-row items-center overflow-hidden rounded-2xl p-2">
         <Ionicons name={isFavorite ? 'heart' : 'heart-outline'} size={24} color={'white'} />
       </BlurView>

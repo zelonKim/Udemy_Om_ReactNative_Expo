@@ -1,4 +1,4 @@
-import { create } from 'axios';
+import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { zustandStorage } from '../storage';
 
@@ -7,6 +7,8 @@ type TokenType = {
 };
 
 interface AuthState {
+  user: string | null;
+  setUser: (email: string | null) => void;
   token: TokenType | null;
   status: 'idle' | 'signOut' | 'signIn';
   signIn: (data: TokenType) => void;
@@ -17,18 +19,25 @@ interface AuthState {
 const useAuth = create<AuthState>()(
   persist(
     (set, get) => ({
+      user: null,
       token: null,
       status: 'idle',
+      setUser: (email) => {
+        set({
+          user: email,
+        });
+      },
       signIn: (token) => {
         set({
           status: 'signIn',
           token: token,
         });
       },
-      signOut: (token) => {
+      signOut: () => {
         set({
           status: 'signOut',
           token: null,
+          user: null,
         });
       },
       hydrate: () => {
@@ -50,3 +59,7 @@ const useAuth = create<AuthState>()(
 export default useAuth;
 
 
+
+export const getToken = () => useAuth.getState().token;
+
+export const signOut = () => useAuth.getState().signOut();

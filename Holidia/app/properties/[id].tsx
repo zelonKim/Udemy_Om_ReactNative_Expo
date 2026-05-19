@@ -29,7 +29,7 @@ const Property = () => {
   const { id } = useLocalSearchParams();
 
   const { data } = useQuery({
-    queryKey: ['property'],
+    queryKey: ['properties-id'],
     queryFn: async () => {
       const { data } = await client.get(`/properties/${id}`);
       return data.property;

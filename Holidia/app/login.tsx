@@ -5,10 +5,33 @@ import Header from '@/components/header';
 import { useState } from 'react';
 import { router } from 'expo-router';
 import { PRIMARY } from '@/core/theme/colors';
+import { client } from '@/core/api/client';
+import useAuth from '@/core/auth';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const { signIn, setUser } = useAuth();
+
+  const handleSignIn = async () => {
+    try {
+      const response = await client.post('/users/login', {
+        email,
+        password,
+      });
+      
+      signIn({
+        access: response.data.token,
+      });
+
+      setUser(email);
+
+      router.push('/');
+    } catch (err: any) {
+      console.log(err.response?.data);
+    }
+  };
 
   return (
     <Container>
@@ -25,14 +48,15 @@ const Login = () => {
       </View>
 
       <TextInput
-        className="mx-8 mt-10 rounded-xl bg-gray-100 px-32 py-6 text-center"
+        className="mx-8 mt-10 rounded-xl bg-gray-100 px-4 py-6 text-center"
         placeholder="이메일"
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
       />
+
       <TextInput
-        className="mx-8 mt-6 rounded-xl bg-gray-100 px-32 py-6 text-center"
+        className="mx-8 mt-6 rounded-xl bg-gray-100 px-4 py-6 text-center"
         placeholder="비밀번호"
         value={password}
         onChangeText={setPassword}
@@ -41,9 +65,7 @@ const Login = () => {
       />
 
       <TouchableOpacity
-        onPress={() => {
-          router.push('/');
-        }}
+        onPress={handleSignIn}
         style={{ backgroundColor: PRIMARY, paddingVertical: 16, marginTop: 24, borderRadius: 16 }}
         className="mx-4 items-center ">
         <Text variant="button" className="text-center">
