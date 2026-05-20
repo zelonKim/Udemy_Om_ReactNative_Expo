@@ -9,7 +9,6 @@ import { ActivityIndicator } from 'react-native';
 import { ResponsiveGrid } from 'react-native-flexible-grid';
 
 export default function Favorite() {
-
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['favorites'],
     queryFn: async () => {

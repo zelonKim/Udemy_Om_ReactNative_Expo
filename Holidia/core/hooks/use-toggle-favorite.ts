@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { client } from '../api/client';
+import { Alert } from 'react-native';
 
 type ToggleFavoriteParams = {
   propertyId: string;
   currentFavoriteStatus: boolean;
 };
-
 
 export const useToggleFavorite = () => {
   const queryClient = useQueryClient();
@@ -13,6 +13,7 @@ export const useToggleFavorite = () => {
   return useMutation({
     mutationFn: async ({ propertyId }: ToggleFavoriteParams) => {
       const { data } = await client.post(`/favorites/${propertyId}`);
+      // Alert.alert(data.message);
       return data;
     },
 

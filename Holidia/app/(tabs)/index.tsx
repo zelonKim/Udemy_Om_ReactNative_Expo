@@ -7,9 +7,7 @@ import MainHeader from '@/components/home/main-header';
 import { useQuery } from '@tanstack/react-query';
 import { client } from '@/core/api/client';
 
-
 export default function Home() {
-
   const { data, isLoading } = useQuery({
     queryKey: ['properties'],
     queryFn: async () => {

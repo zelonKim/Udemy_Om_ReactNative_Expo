@@ -3,19 +3,17 @@ import Header from '@/components/header';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, TouchableOpacity, View } from 'react-native';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
-  BottomSheetFlashList,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import PropertyImage from '@/components/property/property-image';
-import { PROPERTIES } from '@/core/constants/data';
 import Text from '@/components/text';
 import { PRIMARY } from '@/core/theme/colors';
 import AmenitiesList from './amenities-list';
-import { Calendar, fromDateId, toDateId, useDateRange } from '@marceloterreiro/flash-calendar';
+import { Calendar, toDateId, useDateRange } from '@marceloterreiro/flash-calendar';
 import { today } from '@/core/constants/today';
 import { addMonths, differenceInDays, subMonths } from 'date-fns';
 import { Button } from '@/components/Button';
@@ -28,7 +26,7 @@ import { client } from '@/core/api/client';
 const Property = () => {
   const { id } = useLocalSearchParams();
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery<Property>({
     queryKey: ['properties-id'],
     queryFn: async () => {
       const { data } = await client.get(`/properties/${id}`);
@@ -59,7 +57,7 @@ const Property = () => {
 
   const { calendarActiveDateRanges, onCalendarDayPress } = useDateRange();
 
-  console.log({ calendarActiveDateRanges }); // {"calendarActiveDateRanges": [{"endId": "2026-05-29", "startId": "2026-05-25"}]}
+  // console.log({ calendarActiveDateRanges }); // {"calendarActiveDateRanges": [{"endId": "2026-05-29", "startId": "2026-05-25"}]}
 
   const calculateDays = () => {
     if (!calendarActiveDateRanges[0]?.startId) return 0;
@@ -73,6 +71,13 @@ const Property = () => {
 
   const hasSelectedDates = Boolean(calendarActiveDateRanges[0]?.startId);
 
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+
+  const days = calculateDays();
+  const totalPrice = days * property.price_per_night;
+
   return (
     <Container>
       <Header title="Property" />
@@ -83,35 +88,28 @@ const Property = () => {
           isFavorite={property?.is_favorite}
         />
 
-        <Text variant="body-primary" className="text-center">
-          {property?.name}
-        </Text>
-
-        <View className="flex flex-row items-center justify-center">
+        <View className="flex flex-row items-center justify-between">
+          <Text variant="subtitle-primary" className="mb-3 text-center">
+            {property?.name}
+          </Text>
+          <View className="flex flex-row items-center justify-center">
+            <Ionicons name="pricetag" size={12} color={PRIMARY} />
+            <Text variant="body-primary" className="mb-1 ml-2 text-center">
+              {property?.price_per_night} $ / night
+            </Text>
+          </View>
+        </View>
+        <View className="flex flex-row items-center">
           <Ionicons name="location" size={16} color={PRIMARY} />
           <Text variant="body-primary" className="">
             {property?.city || 'none'}, {property?.country || 'none'}
           </Text>
         </View>
-
         <Text variant="body" className="my-5 text-gray-700">
           {property?.description || 'none'}
         </Text>
 
         <AmenitiesList amenities={property?.amenities || 'none'} />
-
-        <View className=" -z-10 mx-4 mt-auto flex flex-row items-center justify-center py-6">
-          <TouchableOpacity
-            onPress={() => {
-              bottomSheetRef.current?.expand();
-            }}
-            className="flex-grow"
-            style={{ backgroundColor: PRIMARY, borderRadius: 16, paddingVertical: 16 }}>
-            <Text variant="button" className="text-center">
-              예약하기
-            </Text>
-          </TouchableOpacity>
-        </View>
       </ScrollView>
 
       <BottomSheet
@@ -121,8 +119,14 @@ const Property = () => {
         backdropComponent={renderBackdrop}
         enablePanDownToClose={true}
         enableDynamicSizing={true}>
-        <BottomSheetView style={{ flex: 1 }}>
-          <View className="d-flex mt-3 flex-row justify-between px-6">
+        <BottomSheetView style={{ flex: 1, paddingHorizontal: 5 }}>
+          <View className="flex flex-row items-center justify-center px-4">
+            <Ionicons name="wallet" color={PRIMARY} size={20} />
+            <Text variant="subtitle" className="mx-4">
+              total: {hasSelectedDates ? totalPrice : property.price_per_night} $
+            </Text>
+          </View>
+          <View className="d-flex flex-row justify-between px-6">
             <Button
               title="이전 달"
               onPress={() => {
@@ -159,9 +163,9 @@ const Property = () => {
 
               const cartItem: ICartItem = {
                 id: 'cart' + nanoid(),
+                product: property.id,
                 image: property.images[0],
                 name: property.name,
-                product: property.id,
                 price_per_night: property.price_per_night,
                 quantity: 1,
                 startDate: calendarActiveDateRanges[0].startId,
@@ -169,15 +173,61 @@ const Property = () => {
                 days: calculateDays(),
               };
               addItem(cartItem);
-              router.push('/checkout');
+              bottomSheetRef.current?.close();
             }}>
             <Ionicons name="checkmark-circle" size={23} color={'white'} />
             <Text variant="body" className="text-center text-white">
-              확정하기
+              선택하기
             </Text>
           </TouchableOpacity>
         </BottomSheetView>
       </BottomSheet>
+
+      <View className="-z-10 mx-4 mt-auto flex flex-row items-center justify-center py-2">
+        <Pressable
+          onPress={() => {
+            bottomSheetRef.current?.expand();
+          }}
+          className="mr-4">
+          {hasSelectedDates ? (
+            <>
+              <View className="flex flex-row items-center justify-center">
+                <Ionicons name="pricetag" color={PRIMARY} size={16} />
+                <Text variant="body-primary" className="text-center">
+                  {' '}
+                  {totalPrice} $
+                </Text>
+              </View>
+              <Text variant="caption" className="text-center underline">
+                {days === 1 ? '1 Night' : `${days} Nights`}
+              </Text>
+            </>
+          ) : (
+            <View className="flex flex-row">
+              <Ionicons name="calendar-outline" size={24} color={PRIMARY} />
+              <Text variant="body-primary" className="ml-2 text-center underline">
+                Select Dates
+              </Text>
+            </View>
+          )}
+        </Pressable>
+
+        <TouchableOpacity
+          onPress={() => {
+            router.push('/checkout');
+          }}
+          className="flex-grow"
+          style={{
+            backgroundColor: PRIMARY,
+            borderRadius: 16,
+            paddingVertical: 16,
+            marginVertical: 4,
+          }}>
+          <Text variant="button" className="text-center">
+            예약하기
+          </Text>
+        </TouchableOpacity>
+      </View>
     </Container>
   );
 };
