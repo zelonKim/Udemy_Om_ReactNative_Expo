@@ -1,4 +1,4 @@
-import { Alert, Image, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, TextInput, TouchableOpacity, View } from 'react-native';
 import Text from '@/components/text';
 import Container from '@/components/Container';
 import Header from '@/components/header';
@@ -7,6 +7,7 @@ import { router } from 'expo-router';
 import { PRIMARY } from '@/core/theme/colors';
 import { client } from '@/core/api/client';
 import useAuth from '@/core/auth';
+import { toast } from '@/core/utils/toast';
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -16,7 +17,8 @@ const Signup = () => {
 
   const { signIn, setUser } = useAuth();
 
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleRegister = async () => {
     try {
       if (!email || !name || !password || !passwordConfirm) {
@@ -27,6 +29,8 @@ const Signup = () => {
         Alert.alert('비밀번호 불일치', '입력한 비밀번호가 일치하지 않습니다.');
         return;
       }
+
+      setIsLoading(true);
 
       await client.post('/users', {
         name,
@@ -45,12 +49,14 @@ const Signup = () => {
 
       setUser(email);
 
+      setIsLoading(false);
       router.push('/');
+      toast.success('🤗 Welcome to Holidia');
     } catch (e) {
       console.log(e);
+      setIsLoading(false);
     }
   };
-
 
   return (
     <Container>
@@ -98,9 +104,13 @@ const Signup = () => {
         onPress={handleRegister}
         style={{ backgroundColor: PRIMARY, paddingVertical: 16, marginTop: 32, borderRadius: 16 }}
         className="mx-4 items-center ">
-        <Text variant="button" className="text-center">
-          회원가입
-        </Text>
+        {isLoading ? (
+          <ActivityIndicator color={'white'} />
+        ) : (
+          <Text variant="button" className="text-center">
+            회원가입
+          </Text>
+        )}
       </TouchableOpacity>
     </Container>
   );

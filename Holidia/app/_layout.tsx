@@ -9,16 +9,14 @@ import { APIProvider } from '@/core/api/api-provider';
 import { hydrateAuth } from '@/core/auth';
 import { StripeProvider, useStripe } from '@stripe/stripe-react-native';
 import { Linking } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 export const unstable_settings = {
   initialRouteName: '(tabs)',
 };
 
-
 hydrateAuth();
-
 SplashScreen.preventAutoHideAsync();
-
 
 const Providers = ({ children }: { children: ReactNode }) => {
   const { handleURLCallback } = useStripe();
@@ -58,7 +56,6 @@ const Providers = ({ children }: { children: ReactNode }) => {
     };
   }, [handleDeepLink]);
 
-  
   return (
     <GestureHandlerRootView>
       <StripeProvider publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY || ''}>
@@ -68,12 +65,10 @@ const Providers = ({ children }: { children: ReactNode }) => {
           </ThemeProvider>
         </APIProvider>
       </StripeProvider>
+      <Toast />
     </GestureHandlerRootView>
   );
 };
-
-
-
 
 export default function RootLayout() {
   return (

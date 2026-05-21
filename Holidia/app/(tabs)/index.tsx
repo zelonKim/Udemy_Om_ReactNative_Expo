@@ -1,11 +1,12 @@
 import Text from '@/components/text';
-import { FlatList, View } from 'react-native';
+import { ActivityIndicator, FlatList, View } from 'react-native';
 import Card from '@/components/home/card';
 import Container from '@/components/Container';
 import Discovery from '@/components/home/discovery';
 import MainHeader from '@/components/home/main-header';
 import { useQuery } from '@tanstack/react-query';
 import { client } from '@/core/api/client';
+
 
 export default function Home() {
   const { data, isLoading } = useQuery({
@@ -19,10 +20,8 @@ export default function Home() {
   if (isLoading) {
     return (
       <Container>
-        <View className="flex flex-row items-center justify-center">
-          <Text variant="body" className="text-center">
-            Loading..
-          </Text>
+        <View className="flex-column flex items-center justify-center">
+          <ActivityIndicator />
         </View>
       </Container>
     );

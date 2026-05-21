@@ -22,6 +22,8 @@ import useShoppingCartStore from '@/core/store';
 import { nanoid } from 'nanoid/non-secure';
 import { useQuery } from '@tanstack/react-query';
 import { client } from '@/core/api/client';
+import { toast } from '@/core/utils/toast';
+
 
 const Property = () => {
   const { id } = useLocalSearchParams();
@@ -214,6 +216,7 @@ const Property = () => {
 
         <TouchableOpacity
           onPress={() => {
+            toast.success('🛒 나의 카트에 담겼습니다');
             router.push('/checkout');
           }}
           className="flex-grow"

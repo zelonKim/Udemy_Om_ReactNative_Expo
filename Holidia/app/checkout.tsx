@@ -1,4 +1,4 @@
-import { Alert, ScrollView, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, TouchableOpacity, View } from 'react-native';
 import Text from '@/components/text';
 import Container from '@/components/Container';
 import useShoppingCartStore from '@/core/store';
@@ -10,6 +10,8 @@ import { PRIMARY } from '@/core/theme/colors';
 import { useStripe } from '@stripe/stripe-react-native';
 import { client } from '@/core/api/client';
 import { router } from 'expo-router';
+import { toast } from '@/core/utils/toast';
+import { useState } from 'react';
 
 interface BookingRequest {
   property_id: string;
@@ -28,6 +30,8 @@ const Checkout = () => {
 
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   if (!item) {
     return (
       <View className=" flex flex-1 flex-row items-center justify-center">
@@ -41,6 +45,8 @@ const Checkout = () => {
   const onSubmit = async () => {
     try {
       if (!item) return;
+
+      setIsLoading(true);
       const bookingData: BookingRequest = {
         property_id: item.product,
         check_in: formattedDate(item.startDate as Date),
@@ -64,18 +70,23 @@ const Checkout = () => {
         allowsDelayedPaymentMethods: true,
         returnURL: 'holidia://checkout',
       });
+
       if (initError) {
-        Alert.alert('결제 실패', '결제 도중 에러가 발생했습니다.');
+        toast.error('❌ 결제 도중 에러가 발생했습니다');
+        setIsLoading(false);
       }
 
       const { error: presentError } = await presentPaymentSheet();
       if (presentError) {
-        Alert.alert('결제 실패', '결제 도중 에러가 발생했습니다.');
+        toast.error('❌ 결제 도중 에러가 발생했습니다');
+        setIsLoading(false);
       } else {
-        Alert.alert('결제 성공', '정상적으로 결제가 완료되었습니다.');
+        toast.success('✅ 정상적으로 결제가 완료되었습니다');
+        setIsLoading(false);
         router.push('/payment-successful');
       }
     } catch (e) {
+      setIsLoading(false);
       console.log(e);
     }
   };
@@ -179,9 +190,13 @@ const Checkout = () => {
           marginHorizontal: 16,
           paddingVertical: 16,
         }}>
-        <Text variant="button" className="text-center">
-          결제하기
-        </Text>
+        {isLoading ? (
+          <ActivityIndicator color={'white'} />
+        ) : (
+          <Text variant="button" className="text-center">
+            결제하기
+          </Text>
+        )}
       </TouchableOpacity>
     </Container>
   );

@@ -1,4 +1,4 @@
-import { Image, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, TextInput, TouchableOpacity, View } from 'react-native';
 import Text from '@/components/text';
 import Container from '@/components/Container';
 import Header from '@/components/header';
@@ -7,6 +7,7 @@ import { router } from 'expo-router';
 import { PRIMARY } from '@/core/theme/colors';
 import { client } from '@/core/api/client';
 import useAuth from '@/core/auth';
+import { toast } from '@/core/utils/toast';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -14,22 +15,29 @@ const Login = () => {
 
   const { signIn, setUser } = useAuth();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSignIn = async () => {
     try {
+      setIsLoading(true);
       const response = await client.post('/users/login', {
         email,
         password,
       });
-      
+
       signIn({
         access: response.data.token,
       });
 
       setUser(email);
 
+      toast.success('🤗 Welcome to Holidia');
+      setIsLoading(false);
       router.push('/');
+      
     } catch (err: any) {
       console.log(err.response?.data);
+      setIsLoading(false);
     }
   };
 
@@ -68,9 +76,13 @@ const Login = () => {
         onPress={handleSignIn}
         style={{ backgroundColor: PRIMARY, paddingVertical: 16, marginTop: 24, borderRadius: 16 }}
         className="mx-4 items-center ">
-        <Text variant="button" className="text-center">
-          로그인
-        </Text>
+        {isLoading ? (
+          <ActivityIndicator color={'white'} />
+        ) : (
+          <Text variant="button" className="text-center">
+            로그인
+          </Text>
+        )}
       </TouchableOpacity>
     </Container>
   );
