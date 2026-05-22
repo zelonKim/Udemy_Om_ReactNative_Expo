@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "holidia",
+      "packeage_name": "com.zelon.Holidia",
+      "sha256_cert_fingerprints": [
+        "F0:99:69:EB:0D:D5:B5:E4:B8:5A:17:FE:CC:90:C5:A8:C1:41:FA:2D:19:A2:06:1B:3E:38:FD:57:06:15:4F:93"
+      ]
+    }
+  }
+]

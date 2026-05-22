@@ -25,6 +25,7 @@ const formattedDate = (date: Date): string => {
   return format(date, "yyyy-MM-dd'T'HH:mm:ss'Z'");
 };
 
+
 const Checkout = () => {
   const { item, getTotalPrice } = useShoppingCartStore();
 
@@ -81,7 +82,6 @@ const Checkout = () => {
         toast.error('❌ 결제 도중 에러가 발생했습니다');
         setIsLoading(false);
       } else {
-        toast.success('✅ 정상적으로 결제가 완료되었습니다');
         setIsLoading(false);
         router.push('/payment-successful');
       }

@@ -1,7 +1,7 @@
 import '../global.css';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SplashScreen, Stack } from 'expo-router';
-import { ReactNode, useCallback, useEffect } from 'react';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import theme from '@/core/theme/use-theme-config';
 import { ThemeProvider } from '@react-navigation/native';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
@@ -57,7 +57,7 @@ const Providers = ({ children }: { children: ReactNode }) => {
   }, [handleDeepLink]);
 
   return (
-    <GestureHandlerRootView>
+  <GestureHandlerRootView>
       <StripeProvider publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY || ''}>
         <APIProvider>
           <ThemeProvider value={theme}>
@@ -65,8 +65,8 @@ const Providers = ({ children }: { children: ReactNode }) => {
           </ThemeProvider>
         </APIProvider>
       </StripeProvider>
-      <Toast />
-    </GestureHandlerRootView>
+    <Toast />
+  </GestureHandlerRootView>
   );
 };
 

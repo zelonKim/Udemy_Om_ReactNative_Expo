@@ -6,9 +6,16 @@ import Discovery from '@/components/home/discovery';
 import MainHeader from '@/components/home/main-header';
 import { useQuery } from '@tanstack/react-query';
 import { client } from '@/core/api/client';
-
+import { useEffect } from 'react';
+import { router } from 'expo-router';
 
 export default function Home() {
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     router.push('/payment-successful');
+  //   }, 3000);
+  // }, []);
+
   const { data, isLoading } = useQuery({
     queryKey: ['properties'],
     queryFn: async () => {

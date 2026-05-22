@@ -42,7 +42,8 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.zelon.Holidia"
+      "package": "com.zelon.Holidia",
+      "googleServicesFile": "./google-services.json"
     },
     "extra": {
       "router": {},
